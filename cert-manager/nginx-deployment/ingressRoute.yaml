@@ -1,0 +1,23 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nginx-ingress
+  namespace: nginx
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
+spec:
+  entryPoints:
+    - websecure
+
+  routes:
+  - match: Host(`nginx.midolab.local`)
+    kind: Rule
+    middlewares:
+      - name: redirecttohttps
+        namespace: nginx
+    services:
+      - name: nginx-svc
+        port: 80
+  tls:
+    secretName: nginx-tls-secret

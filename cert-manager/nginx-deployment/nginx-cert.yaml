@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nginx-cert
+  namespace: nginx
+spec:
+  secretName: nginx-tls-secret
+  issuerRef:
+    name: clusterissuer
+    kind: ClusterIssuer
+  commonName: "nginx.midolab.local"
+  dnsNames:
+    - "nginx.midolab.local"

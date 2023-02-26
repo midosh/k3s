@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: traefik-dashboard-auth
+  namespace: traefik
+type: Opaque
+data:
+  users: bWlkbzokYXByMSRHb0JaZlpxSSRhRVVYc3BaNnZCZ0RSMkRjMlowLkMwCgo=
+

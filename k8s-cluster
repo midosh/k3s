@@ -1,0 +1,55 @@
+1- sudo apt update && sudo apt dist-upgrade
+2- sudo apt install containerd
+3- sudo systemctl status containerd.service
+4- sudo mkdir /etc/containerd
+5- containerd config default | sudo tee /etc/containerd/config.toml
+
+edit /etc/containerd/config.toml Set SystemdCgroup = true
+
+          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+            BinaryName = ""
+            CriuImagePath = ""
+            CriuPath = ""
+            CriuWorkPath = ""
+            IoGid = 0
+            IoUid = 0
+            NoNewKeyring = false
+            NoPivotRoot = false
+            Root = ""
+            ShimCgroup = ""
+            SystemdCgroup = true
+			
+6- sudo systemctl restart containerd.service
+7- sudo vi /etc/fstab  disable swap
+   sudo swapoff -a
+   
+8- cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+9- sudo modprobe overlay && sudo modprobe br_netfilter
+10- cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+11- sudo sysctl --system
+12- sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl
+13- sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+14- echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+15- sudo apt-get update
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+
+16- sudo kubeadm init --control-plane-endpoint=10.16.12.105 --node-name k8s-cp --pod-network-cidr=10.244.0.0/16
+17-   kubeadm join 10.16.12.105:6443 --token w85al9.n5ydbw5iov82mz8l \
+        --discovery-token-ca-cert-hash sha256:a6366b95a00fadef5ac1a4a2daf767842f8b5552f8da61fafd6e87f9a432cea1 \
+        --control-plane
+		
+18-   mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  
+19- kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+20- kubeadm token create --print-join-command

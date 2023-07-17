@@ -36,7 +36,7 @@ net.ipv4.ip_forward                 = 1
 EOF
 11- sudo sysctl --system
 12- sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl
-13- sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+13- curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
 14- echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 15- sudo apt-get update
 sudo apt-get install -y kubelet kubeadm kubectl

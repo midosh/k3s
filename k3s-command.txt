@@ -1,2 +1,2 @@
 curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=stable INSTALL_K3S_EXEC="server" sh -s - --disable traefik --disable servicelb
- curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=stable K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="server" sh -s - --disable=traefik --disable=servicelb
+curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=stable K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="server" sh -s - --disable=traefik --disable=servicelb
